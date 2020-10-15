@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -25,7 +25,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private _router: Router,
     private fb: FormBuilder,
-    private _usuarioservice: UsuarioService
+    private _usuarioservice: UsuarioService,
+    private ngZone: NgZone
     ) { }
 
   ngOnInit(): void {
@@ -48,7 +49,10 @@ export class LoginComponent implements OnInit {
 
       this._router.navigateByUrl('/');
     },
-      error => Swal.fire('Error', error.error.msg, 'error')
+      error => {
+        console.log(error.error.errors);
+        
+        Swal.fire('Error', error.error.msg, 'error')}
     )
   }
 
@@ -73,17 +77,12 @@ export class LoginComponent implements OnInit {
     this.startApp();
   }
 
-  startApp() {
-    gapi.load('auth2', () => {
-      // Retrieve the singleton for the GoogleAuth library and set up the client.
-      this.auth2 = gapi.auth2.init({
-        client_id: '480845147781-j281h5a1fdjahhookt6elj8kd1jk5c6p.apps.googleusercontent.com',
-        cookiepolicy: 'single_host_origin',
-        // Request scopes in addition to 'profile' and 'email'
-        //scope: 'additional_scope'
-      });
-      this.attachSignin(document.getElementById('my-signin2'));
-    });
+  async startApp() {
+
+    await this._usuarioservice.googleInit();
+    this.auth2 = this._usuarioservice.auth2;
+    this.attachSignin(document.getElementById('my-signin2'));
+    
   }
 
   attachSignin(element) {    
@@ -92,7 +91,11 @@ export class LoginComponent implements OnInit {
           var id_token = googleUser.getAuthResponse().id_token;
           // console.log(id_token);
           this._usuarioservice.loginGoogle( id_token )
-          .subscribe( resp => this._router.navigateByUrl('/') );
+          .subscribe( resp => {
+            this.ngZone.run( () => {
+              this._router.navigateByUrl('/');
+            })
+          } );
           
         }, (error) => {
           alert(JSON.stringify(error, undefined, 2));
