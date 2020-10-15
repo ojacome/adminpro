@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { RegisterForm } from '../interfaces/register-form.interface';
@@ -19,8 +20,30 @@ export class UsuarioService {
 
 
 
+  validarToken(): Observable<boolean> {
+    const token = localStorage.getItem('token_adminpro') || '';
+
+    return this.http.get(`${base_url}/login/renew`, { 
+      headers: {
+        'x-token': token
+      }
+    }).pipe(
+      tap( (resp: any) => {
+        localStorage.setItem('token_adminpro', resp.token)
+      }),
+      map( resp => true ),
+      catchError( error => of( false ))
+    )
+  }
+
   crearUsuario( formData: RegisterForm){
     return this.http.post(this.url_usuario, formData)    
+    .pipe(
+      tap( (resp: any) => {
+        console.log(resp);        
+        localStorage.setItem('token_adminpro', resp.token)
+      })
+    )
   }
 
   login( formData: LoginForm){

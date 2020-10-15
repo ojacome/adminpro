@@ -45,6 +45,8 @@ export class LoginComponent implements OnInit {
       else{
         localStorage.removeItem('email_adminpro')
       }
+
+      this._router.navigateByUrl('/');
     },
       error => Swal.fire('Error', error.error.msg, 'error')
     )
@@ -90,7 +92,7 @@ export class LoginComponent implements OnInit {
           var id_token = googleUser.getAuthResponse().id_token;
           // console.log(id_token);
           this._usuarioservice.loginGoogle( id_token )
-          .subscribe();
+          .subscribe( resp => this._router.navigateByUrl('/') );
           
         }, (error) => {
           alert(JSON.stringify(error, undefined, 2));

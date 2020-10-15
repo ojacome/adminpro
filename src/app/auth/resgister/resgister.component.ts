@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import Swal from 'sweetalert2';
 
@@ -25,7 +26,8 @@ export class ResgisterComponent{
 
   constructor( 
     private fb: FormBuilder,
-    private _usuarioService: UsuarioService
+    private _usuarioService: UsuarioService,
+    private _router: Router
     ) { }
 
 
@@ -39,7 +41,7 @@ export class ResgisterComponent{
     
     //posteo de la información
     this._usuarioService.crearUsuario( this.registerForm.value)
-    .subscribe( resp => console.log(resp),
+    .subscribe( resp => this._router.navigateByUrl('/'),
       error => Swal.fire('Error', error.error.msg, 'error')
     )
   }
