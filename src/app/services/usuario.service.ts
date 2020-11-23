@@ -6,6 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { RegisterForm } from '../interfaces/register-form.interface';
+import { Usuario } from '../models/usuario.model';
 declare const gapi: any;
 const base_url = environment.base_url;
 
@@ -17,6 +18,7 @@ export class UsuarioService {
 
   private url_usuario = `${base_url}/usuarios`;
   auth2: any;
+  usuario: Usuario;
 
 
 
@@ -38,10 +40,15 @@ export class UsuarioService {
         'x-token': token
       }
     }).pipe(
-      tap( (resp: any) => {
+      map( (resp: any) => {
+        
+        const { nombre, email, role, uid, google, img } = resp.usuario;
+
+        this.usuario = new Usuario(nombre, email,'', img, google, role, uid);
+
         localStorage.setItem('token_adminpro', resp.token)
-      }),
-      map( resp => true ),
+        return true;
+      }),      
       catchError( error => of( false ))
     )
   }

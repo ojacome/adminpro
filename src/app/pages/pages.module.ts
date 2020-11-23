@@ -11,6 +11,7 @@ import { ComponentsModule } from '../components/components.module';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { PromesasComponent } from './promesas/promesas.component';
 import { RjxsComponent } from './rjxs/rjxs.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 
 
@@ -23,7 +24,8 @@ import { RjxsComponent } from './rjxs/rjxs.component';
     PagesComponent,
     AccountSettingsComponent,
     PromesasComponent,
-    RjxsComponent
+    RjxsComponent,
+    PerfilComponent
   ],
   imports: [
     CommonModule,

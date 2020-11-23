@@ -8,6 +8,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { PromesasComponent } from './promesas/promesas.component';
 import { RjxsComponent } from './rjxs/rjxs.component';
 import { AuthGuard } from '../guards/auth.guard';
+import { PerfilComponent } from './perfil/perfil.component';
 
 const routes: Routes = [
     { 
@@ -17,7 +18,8 @@ const routes: Routes = [
         children: [
           { path: '',                   component: DashboardComponent, data: { titulo: 'Dashboard'} },
           { path: 'account-settings',   component: AccountSettingsComponent, data: { titulo: 'Configuraciones'} },  
-          { path: 'grafica1',           component: Grafica1Component, data: { titulo: 'Graficas de pasteles'} },          
+          { path: 'grafica1',           component: Grafica1Component, data: { titulo: 'Graficas de pasteles'} },  
+          { path: 'perfil',             component: PerfilComponent, data: { titulo: 'Perfil de usuario'} },          
           { path: 'progress',           component: ProgressComponent, data: { titulo: 'Ejercicio de barras de progreso'} },
           { path: 'promise',            component: PromesasComponent, data: { titulo: 'Ejercicio de promesas'} },
           { path: 'rxjs',               component: RjxsComponent, data: { titulo: 'Ejercicio de rxjs'} },
