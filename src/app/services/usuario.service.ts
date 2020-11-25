@@ -32,12 +32,18 @@ export class UsuarioService {
 
 
 
-  validarToken(): Observable<boolean> {
-    const token = localStorage.getItem('token_adminpro') || '';
+  get token(): string {
+    return localStorage.getItem('token_adminpro') || '';
+  }  
 
+  get uid() {
+    return this.usuario.uid || '';
+  }
+
+  validarToken(): Observable<boolean> {    
     return this.http.get(`${base_url}/login/renew`, { 
       headers: {
-        'x-token': token
+        'x-token': this.token
       }
     }).pipe(
       map( (resp: any) => {
@@ -56,11 +62,24 @@ export class UsuarioService {
   crearUsuario( formData: RegisterForm){
     return this.http.post(this.url_usuario, formData)    
     .pipe(
-      tap( (resp: any) => {
-        console.log(resp);        
+      tap( (resp: any) => {              
         localStorage.setItem('token_adminpro', resp.token)
       })
     )
+  }
+
+  actualizar(data: { email: string, nombre: string, role: string }){
+
+    data = {
+      ...data,
+      role: this.usuario.role
+    }
+
+    return this.http.put(`${this.url_usuario }/${this.uid}`, data, { 
+      headers: {
+        'x-token': this.token
+      }
+    });
   }
 
   login( formData: LoginForm){
