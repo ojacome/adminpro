@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/models/usuario.model';
+import { BusquedasService } from 'src/app/services/busquedas.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
@@ -12,12 +13,15 @@ export class UsuariosComponent implements OnInit {
 
   totalUsuarios: number = 0;
   usuarios: Usuario[] = [];
+  usuariosTemp: Usuario[] = [];
   desde: number = 0;
   cargando: boolean = true;
 
 
 
-  constructor( private usuarioSvc: UsuarioService ) { }
+  constructor( 
+    private usuarioSvc: UsuarioService,
+    private buscarSvc: BusquedasService ) { }
 
   ngOnInit(): void {
 
@@ -35,6 +39,7 @@ export class UsuariosComponent implements OnInit {
       this.cargando = false;
       this.totalUsuarios = total;      
       this.usuarios = usuarios;
+      this.usuariosTemp = usuarios;
       
     } );
   }
@@ -53,4 +58,20 @@ export class UsuariosComponent implements OnInit {
     this.cargarUsuarios();
   }
 
+  buscar( termino: string ){    
+    
+    if( termino.length < 2 ){ 
+      this.usuarios = this.usuariosTemp;
+      return; 
+    }
+    this.cargando = true;
+
+    this.buscarSvc.buscar('usuarios', termino)
+    .subscribe( res =>{ 
+      this.cargando = false;      
+      this.usuarios = res;
+    })
+  }
+
 }
+
