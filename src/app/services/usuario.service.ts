@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, delay, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
 import { LoginForm } from '../interfaces/login-form.interface';
 import { RegisterForm } from '../interfaces/register-form.interface';
 import { Usuario } from '../models/usuario.model';
@@ -38,6 +39,14 @@ export class UsuarioService {
 
   get uid() {
     return this.usuario.uid || '';
+  }
+
+  get headers(){
+    return {
+      headers: {
+        'x-token': this.token
+      }
+    }
   }
 
   validarToken(): Observable<boolean> {    
@@ -80,6 +89,24 @@ export class UsuarioService {
         'x-token': this.token
       }
     });
+  }
+
+  obtenerUsuarios( desde: number = 0 ){
+
+    const url = `${base_url}/usuarios?desde=${desde}`;
+
+    return this.http.get<CargarUsuario>( url, this.headers )
+    .pipe(      
+      map( res =>  {
+        const usuarios = res.usuarios.map( 
+          user => new Usuario(user.nombre, user.email, '', user.img, user.google, user.role, user.uid)
+          );
+        return {
+          total: res.total,
+          usuarios
+        };
+      })
+    )
   }
 
   login( formData: LoginForm){
