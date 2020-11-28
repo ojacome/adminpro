@@ -79,16 +79,16 @@ export class UsuarioService {
 
   actualizar(data: { email: string, nombre: string, role: string }){
 
-    data = {
-      ...data,
-      role: this.usuario.role
-    }
+    // data = {
+    //   ...data,
+    //   role: this.usuario.role
+    // }
 
-    return this.http.put(`${this.url_usuario }/${this.uid}`, data, { 
-      headers: {
-        'x-token': this.token
-      }
-    });
+    return this.http.put(`${this.url_usuario }/${this.uid}`, data, this.headers);
+  }
+
+  actualizarAdmin( usuario: Usuario ){
+    return this.http.put(`${this.url_usuario }/${this.usuario.uid}`, usuario, this.headers);
   }
 
   obtenerUsuarios( desde: number = 0 ){

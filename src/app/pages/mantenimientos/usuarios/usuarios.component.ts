@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { Usuario } from 'src/app/models/usuario.model';
 import { BusquedasService } from 'src/app/services/busquedas.service';
+import { ModalImgService } from 'src/app/services/modal-img.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import Swal from 'sweetalert2';
 
@@ -10,23 +13,34 @@ import Swal from 'sweetalert2';
   styles: [
   ]
 })
-export class UsuariosComponent implements OnInit {
+export class UsuariosComponent implements OnInit, OnDestroy {
 
   totalUsuarios: number = 0;
   usuarios: Usuario[] = [];
   usuariosTemp: Usuario[] = [];
   desde: number = 0;
   cargando: boolean = true;
+  imgSubs: Subscription;
 
 
 
   constructor( 
     private usuarioSvc: UsuarioService,
-    private buscarSvc: BusquedasService ) { }
+    private buscarSvc: BusquedasService,
+    private modalImgSvc: ModalImgService ) { }
+
 
   ngOnInit(): void {
 
     this.cargarUsuarios();
+    
+    this.imgSubs = this.modalImgSvc.nuevaImagen
+    .pipe( delay(100) )
+    .subscribe( img => this.cargarUsuarios());
+  }
+
+  ngOnDestroy(): void {
+    this.imgSubs.unsubscribe();
   }
 
 
@@ -79,7 +93,7 @@ export class UsuariosComponent implements OnInit {
       Swal.fire('Error', 'No puede eliminar el usuario', 'error');
       return; 
     }
-    
+
     Swal.fire({
       title: `Deseas eliminar a ${usuario.nombre}?`,
       text: "No podrás recuperar la información!",
@@ -105,6 +119,17 @@ export class UsuariosComponent implements OnInit {
         })
       }
     })    
+  }
+
+  cambiarRole(usuario: Usuario){    
+    this.usuarioSvc.actualizarAdmin(usuario)
+    .subscribe( res => console.log(res))
+  }
+
+  abrirModal( usuario: Usuario){
+    console.log(usuario);
+    
+    this.modalImgSvc.abrirModal('usuarios', usuario.uid, usuario.img);
   }
 }
 
