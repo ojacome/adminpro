@@ -109,6 +109,10 @@ export class UsuarioService {
     )
   }
 
+  eliminarUsuario( usuario: Usuario ){
+    return this.http.delete(`${this.url_usuario }/${usuario.uid}`, this.headers);
+  }
+
   login( formData: LoginForm){
     return this.http.post(`${base_url}/login`, formData)    
     .pipe(
