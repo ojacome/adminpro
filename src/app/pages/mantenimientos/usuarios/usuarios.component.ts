@@ -124,8 +124,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     .subscribe( res => console.log(res))
   }
 
-  abrirModal( usuario: Usuario){
-    console.log(usuario);
+  abrirModal( usuario: Usuario){  
     
     this.modalImgSvc.abrirModal('usuarios', usuario.uid, usuario.img);
   }

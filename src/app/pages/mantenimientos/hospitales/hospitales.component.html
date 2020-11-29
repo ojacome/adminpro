@@ -35,9 +35,9 @@
 
                     <div class="col">
                         <div class="text-right">
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" (click)="crearHospital()">
                                 <i class="fa fa-hospital-o"></i>
-                                Crear Hospital
+                                Nuevo Hospital
                             </button>
                         </div>
                     </div>
@@ -58,7 +58,8 @@
                                     <img 
                                     [src]="hospital.img | imagen:'hospitales'" 
                                     [alt]="hospital.nombre"
-                                    class="table-avatar">
+                                    class="table-avatar cursor"
+                                    (click)="cambiarImagen(hospital)">
                                 </td>                                
                                 <td>
                                     <input 

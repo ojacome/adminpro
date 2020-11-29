@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { Hospital } from 'src/app/models/hospital.model';
 import { HospitalService } from 'src/app/services/hospital.service';
+import { ModalImgService } from 'src/app/services/modal-img.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -9,19 +12,28 @@ import Swal from 'sweetalert2';
   styles: [
   ]
 })
-export class HospitalesComponent implements OnInit {
+export class HospitalesComponent implements OnInit, OnDestroy {
 
   hospitales: Hospital[] = [];
   cargando: boolean = true;
+  imgSubs: Subscription;
 
 
   constructor(
-    private hospitalSvc: HospitalService
+    private hospitalSvc: HospitalService,
+    private modalImgSvc: ModalImgService
   ) { }
+
+  ngOnDestroy(): void {
+    this.imgSubs.unsubscribe();
+  }
 
   ngOnInit(): void {
 
    this.cargarHospitales();
+   this.imgSubs = this.modalImgSvc.nuevaImagen
+    .pipe( delay(100) )
+    .subscribe( () => this.cargarHospitales());
   }
 
 
@@ -58,13 +70,34 @@ export class HospitalesComponent implements OnInit {
       if (result.isConfirmed) {
 
         this.hospitalSvc.eliminarHospital( hospital._id)
-        .subscribe( hospital =>{
-          Swal.fire('Hospital Eliminado',`Información borrada del hospital ${hospital.nombre}`, 'success')
+        .subscribe( () =>{
+          Swal.fire('Hospital Eliminado','', 'success')
           this.cargarHospitales();
         })
       }
-    }) 
+    })     
+  }
 
+  async crearHospital(){
+    const { value } = await Swal.fire<string>({
+      title: 'Nuevo Hospital',
+      input: 'text',
+      inputPlaceholder: 'Nombre del hospital',
+      confirmButtonText: 'Guardar',
+      showCloseButton: true,
+      showCancelButton: true
+    })
     
+    if( value.trim().length > 2 ){
+      this.hospitalSvc.crearHospital(value)
+      .subscribe( hospital => {
+        Swal.fire('Hospital creado!', `Nuevo hospital ${hospital.nombre}`, 'success');
+        this.hospitales.push(hospital);
+      })
+    }
+  }
+
+  cambiarImagen( hospital: Hospital ){
+    this.modalImgSvc.abrirModal('hospitales', hospital._id, hospital.img);
   }
 }

@@ -54,8 +54,6 @@ export class HospitalService {
   eliminarHospital( _id: string ){
 
     const url = `${base_url}/hospitales/${_id}`;
-    return this.http.delete( url, this.headers ) 
-    .pipe( map( (res: {ok: boolean, hospital: Hospital}) =>{ console.log(res);
-     return res.hospital}) );
+    return this.http.delete( url, this.headers);
   }
 }
