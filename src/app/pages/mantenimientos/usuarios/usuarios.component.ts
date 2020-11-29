@@ -106,9 +106,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
 
         this.usuarioSvc.eliminarUsuario( usuario )
-        .subscribe( res =>{
-          console.log(res);
-          
+        .subscribe( res =>{         
           Swal.fire(
             'Eliminado!',
             'El usuario ha sido eliminado.',
