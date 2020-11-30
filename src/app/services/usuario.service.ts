@@ -58,22 +58,25 @@ export class UsuarioService {
       map( (resp: any) => {
         
         const { nombre, email, role, uid, google, img } = resp.usuario;
-
         this.usuario = new Usuario(nombre, email,'', img, google, role, uid);
 
-        localStorage.setItem('token_adminpro', resp.token)
+        this.guardarLocalStorage(resp);
+
         return true;
       }),      
       catchError( error => of( false ))
     )
   }
 
+  guardarLocalStorage(res: any){
+    localStorage.setItem('token_adminpro', res.token)
+    localStorage.setItem('menu_adminpro', JSON.stringify(res.menu))
+  }
+
   crearUsuario( formData: RegisterForm){
     return this.http.post(this.url_usuario, formData)    
     .pipe(
-      tap( (resp: any) => {              
-        localStorage.setItem('token_adminpro', resp.token)
-      })
+      tap( (resp: any) => this.guardarLocalStorage(resp))
     )
   }
 
@@ -116,18 +119,14 @@ export class UsuarioService {
   login( formData: LoginForm){
     return this.http.post(`${base_url}/login`, formData)    
     .pipe(
-      tap( (resp: any) => {
-        localStorage.setItem('token_adminpro', resp.token)
-      })
+      tap( (resp: any) => this.guardarLocalStorage(resp))
     )
   }
 
   loginGoogle( token: string ){
     return this.http.post(`${base_url}/login/google`, { token })    
     .pipe(
-      tap( (resp: any) => {
-        localStorage.setItem('token_adminpro', resp.token)
-      })
+      tap( (resp: any) => this.guardarLocalStorage(resp))
     )
   }
 
@@ -148,7 +147,10 @@ export class UsuarioService {
   }
 
   logout() {
-    localStorage.removeItem('token_adminpro');    
+    localStorage.removeItem('token_adminpro');
+    
+    //borrar menu
+    localStorage.removeItem('menu_adminpro');
       
     this.auth2.signOut().then( () => {
       console.log('User signed out.');
