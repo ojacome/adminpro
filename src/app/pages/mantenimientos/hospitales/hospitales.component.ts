@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 import { Hospital } from 'src/app/models/hospital.model';
+import { BusquedasService } from 'src/app/services/busquedas.service';
 import { HospitalService } from 'src/app/services/hospital.service';
 import { ModalImgService } from 'src/app/services/modal-img.service';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-hospitales',
@@ -15,13 +16,16 @@ import Swal from 'sweetalert2';
 export class HospitalesComponent implements OnInit, OnDestroy {
 
   hospitales: Hospital[] = [];
+  hospitalesTemp: Hospital[] = [];
   cargando: boolean = true;
   imgSubs: Subscription;
 
 
+
   constructor(
     private hospitalSvc: HospitalService,
-    private modalImgSvc: ModalImgService
+    private modalImgSvc: ModalImgService,
+    private buscarSvc: BusquedasService
   ) { }
 
   ngOnDestroy(): void {
@@ -45,7 +49,8 @@ export class HospitalesComponent implements OnInit, OnDestroy {
     .subscribe( hospitales => {
 
       this.cargando = false;
-      this.hospitales = hospitales
+      this.hospitales = hospitales;
+      this.hospitalesTemp = hospitales;
     })
   }
 
@@ -79,7 +84,7 @@ export class HospitalesComponent implements OnInit, OnDestroy {
   }
 
   async crearHospital(){
-    const { value } = await Swal.fire<string>({
+    const { value = '' } = await Swal.fire<string>({
       title: 'Nuevo Hospital',
       input: 'text',
       inputPlaceholder: 'Nombre del hospital',
@@ -99,5 +104,20 @@ export class HospitalesComponent implements OnInit, OnDestroy {
 
   cambiarImagen( hospital: Hospital ){
     this.modalImgSvc.abrirModal('hospitales', hospital._id, hospital.img);
+  }
+
+  buscarHospital(termino: string ){
+    if( termino.length < 2 ){ 
+      this.hospitales = this.hospitalesTemp;
+      return 
+    }
+    
+    this.cargando = true;
+
+    this.buscarSvc.buscar('hospitales', termino)
+    .subscribe( (hospitales: Hospital[]) =>{ 
+      this.cargando = false;      
+      this.hospitales = hospitales;
+    })
   }
 }

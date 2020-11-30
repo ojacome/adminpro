@@ -82,7 +82,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     this.cargando = true;
 
     this.buscarSvc.buscar('usuarios', termino)
-    .subscribe( res =>{ 
+    .subscribe( (res: Usuario[]) =>{ 
       this.cargando = false;      
       this.usuarios = res;
     })

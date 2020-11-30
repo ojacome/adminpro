@@ -4,9 +4,11 @@
             <div class="card-body">
                 
                 <input
+                #termino
                 type="text"                
                 class="form-control"
-                placeholder="buscar hospital..."/>
+                placeholder="buscar hospital..."
+                (keyup)="buscarHospital(termino.value)"/>
             </div>
         </div>
     </div>
