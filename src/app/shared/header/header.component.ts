@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Usuario } from 'src/app/models/usuario.model';
 import { UsuarioService } from 'src/app/services/usuario.service';
 declare function customSidebar();
@@ -17,7 +18,9 @@ export class HeaderComponent implements OnInit {
 
 
 
-  constructor( private _usuarioSvc: UsuarioService) { 
+  constructor( 
+    private _usuarioSvc: UsuarioService,
+    private router: Router) { 
     this.user = _usuarioSvc.usuario;
   }
 
@@ -29,5 +32,15 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     this._usuarioSvc.logout();
+  }
+
+  buscarTodo(termino: string){
+    if(termino.length < 2){
+      return;
+    }
+    else{
+      this.router.navigateByUrl(`/dashboard/busqueda/${termino}`)
+    }
+    
   }
 }
