@@ -34,7 +34,13 @@ export class MedicoService {
     .pipe( map( (res: {ok: boolean, medicos: Medico[]}) => res.medicos) );
   }
 
-  crearMedico( medico: Medico ){
+  obtenerMedicoPorID( id: string ){
+    const url = `${base_url}/medicos/${id}`;
+    return this.http.get( url, this.headers ) 
+    .pipe( map( (res: {ok: boolean, medico: Medico}) => res.medico) );
+  }
+
+  crearMedico( medico: { nombre: string, hospital: string } ){
 
     const url = `${base_url}/medicos`;
     return this.http.post( url, medico , this.headers ) 
