@@ -24,7 +24,7 @@ const childRoutes: Routes = [
   { path: 'grafica1',           component: Grafica1Component, data: { titulo: 'Graficas de pasteles'} },  
   { path: 'perfil',             component: PerfilComponent, data: { titulo: 'Perfil de usuario'} },          
   { path: 'progress',           component: ProgressComponent, data: { titulo: 'Ejercicio de barras de progreso'} },
-  { path: 'promise',            component: PromesasComponent, data: { titulo: 'Ejercicio de promesas'} },
+  { path: 'promesas',           component: PromesasComponent, data: { titulo: 'Ejercicio de promesas'} },
   { path: 'rxjs',               component: RjxsComponent, data: { titulo: 'Ejercicio de rxjs'} },
 
   //mantennimientos
