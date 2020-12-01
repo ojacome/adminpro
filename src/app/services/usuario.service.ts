@@ -37,6 +37,10 @@ export class UsuarioService {
     return localStorage.getItem('token_adminpro') || '';
   }  
 
+  get role(): 'ADMIN_ROLE'|'USER_ROLE' {
+    return this.usuario.role;
+  }  
+
   get uid() {
     return this.usuario.uid || '';
   }
