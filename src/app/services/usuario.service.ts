@@ -156,12 +156,15 @@ export class UsuarioService {
     //borrar menu
     localStorage.removeItem('menu_adminpro');
       
+    
     this.auth2.signOut().then( () => {
-      console.log('User signed out.');
+      console.log('User signed out Google.');
       this.ngZone.run( () => {
-        this._router.navigateByUrl('/login');
       })
-    });
+    })
+    .catch( err => console.log(err) );
+
+    this._router.navigateByUrl('/login');
     
   }
 }
