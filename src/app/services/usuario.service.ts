@@ -95,7 +95,7 @@ export class UsuarioService {
   }
 
   actualizarAdmin( usuario: Usuario ){
-    return this.http.put(`${this.url_usuario }/${this.usuario.uid}`, usuario, this.headers);
+    return this.http.put(`${this.url_usuario }/${usuario.uid}`, usuario, this.headers);
   }
 
   obtenerUsuarios( desde: number = 0 ){
