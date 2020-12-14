@@ -6,16 +6,14 @@ import { environment } from 'src/environments/environment';
 })
 export class ImagenPipe implements PipeTransform {
 
-  transform( img: string, tipo: 'usuarios'|'medicos'|'hospitales'): string {
-    if(img){
-      if(img.includes('https')){
-          return img;
-      }
-      return `${environment.base_url}/upload/${tipo}/${img}`;
+  transform( img: string, tipo: 'usuarios'|'medicos'|'hospitales'): string {   
+    if(img){      
+        return img;            
     }
     else{
-        return `${environment.base_url}/upload/usuarios/no-image`;
+        return `https://res.cloudinary.com/ojacome/image/upload/v1607796451/adminpro/no-img_ewaqjp.jpg`;
     }
+    
   }
 
 }

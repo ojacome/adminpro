@@ -33,7 +33,7 @@ export class FileUploadService {
       const data = await res.json();
 
       if( data.ok ){
-        return data.nombreArchivo
+        return data.img
       }
       else{
         console.log(data.msg);        

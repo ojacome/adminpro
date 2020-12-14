@@ -48,7 +48,7 @@
                 <h6 class="card-subtitle">Cmbiar</h6>
                 
                 <div class="text-center">
-                    <img *ngIf="!imgTemp" class="img-avatar" [src]="usuario.imagenUrl" [alt]="usuario.nombre">
+                    <img *ngIf="!imgTemp" class="img-avatar" [src]="usuario.img | imagen:'usuarios'" [alt]="usuario.nombre">
                     <img *ngIf="imgTemp" class="img-avatar" [src]="imgTemp" [alt]="usuario.nombre">  
                 </div>
 

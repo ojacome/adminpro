@@ -25,7 +25,7 @@ export class PerfilComponent implements OnInit {
     private usuarioSvc: UsuarioService,
     private fileSvc: FileUploadService ) { 
       
-      this.usuario = usuarioSvc.usuario;
+      this.usuario = usuarioSvc.usuario;           
     }
 
   ngOnInit(): void {
